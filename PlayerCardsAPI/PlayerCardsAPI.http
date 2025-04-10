@@ -1,0 +1,6 @@
+@PlayerCardsAPI_HostAddress = http://localhost:5213
+
+GET {{PlayerCardsAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

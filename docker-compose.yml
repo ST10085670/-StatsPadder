@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  conference-db:
+    build:
+      context: ./PlayerCardDB  # Adjusted build context
+      dockerfile: Dockerfile   # Dockerfile for the database
+    container_name: player-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Thandi@0312!"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+      - "1400:1433" 
+      
+    volumes:
+      - db_data:/var/opt/mssql
+      - ./logs:/var/opt/mssql/log  # Optional: To access logs
+    restart: always  # Automatically restart on failure
+    networks:
+      - player-network
+
+  api-service:
+    build:
+      context: .               # Root context to ensure file accessibility
+      dockerfile: ./PlayerCardsAPI/Dockerfile  # Path to API Dockerfile
+    container_name: api-service-player
+    environment:
+      SQL_CONNECTION_STRING: "Server=player-db;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Password1!"
+    ports:
+      - "5000:5000"
+    depends_on:
+      conference-db:
+        condition: service_healthy
+    networks:
+      - player-network
+
+networks:
+  player-network:
+    driver: bridge
+
+volumes:
+  db_data:
