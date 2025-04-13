@@ -27,8 +27,9 @@ namespace prjPlayerCardTrader
             app.UseAuthorization();
 
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+               name: "default",
+               pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
             app.Run();
         }
