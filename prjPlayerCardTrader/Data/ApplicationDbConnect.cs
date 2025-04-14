@@ -4,24 +4,15 @@ using prjPlayerCardTrader.Models;
 
 namespace prjPlayerCardTrader.Data
 {
-    public class ApplicationDbConnect : DbContext
+    public class ApplicationDbConnect
     {
+        private readonly string _connectionString;
 
-        public ApplicationDbConnect(DbContextOptions<ApplicationDbConnect> options)
-            : base(options)
+        public ApplicationDbConnect(IConfiguration config)
         {
+            _connectionString = config.GetConnectionString("SQL_CONNECTION_STRING");
         }
 
-
-       
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbConnect).Assembly);
-            base.OnModelCreating(modelBuilder);
-        }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Purchase> Purchases { get; set; }
+        public SqlConnection GetConnection() => new SqlConnection(_connectionString);
     }
 }

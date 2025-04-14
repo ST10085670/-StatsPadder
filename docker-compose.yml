@@ -12,7 +12,8 @@ services:
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"
-      - "8080:1433"
+      -  "1400:1433"
+      
     volumes:
       - db_data:/var/opt/mssql
       - ./logs:/var/opt/mssql/log
@@ -25,9 +26,9 @@ services:
       dockerfile: ./prjPlayerCardTrader/Dockerfile
     container_name: mvc-app
     environment:
-      SQL_CONNECTION_STRING: "Server=player-db, 1433;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Password1!"
+      SQL_CONNECTION_STRING: "Server=player-db, 1433;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Thandi@0312!"
     ports:
-      - "5000:1433"
+      - "5001:80"
     depends_on:
       - player-db
     networks:

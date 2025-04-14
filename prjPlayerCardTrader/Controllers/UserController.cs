@@ -8,12 +8,11 @@ namespace prjPlayerCardTrader.Controllers
 {
     public class UserController : Controller
     {
+        private readonly ApplicationDbConnect _db;
 
-        private readonly IConfiguration _config;
-
-        public UserController(IConfiguration config)
+        public UserController(ApplicationDbConnect db)
         {
-            _config = config;
+            _db = db;
         }
 
         [HttpGet]
@@ -25,18 +24,18 @@ namespace prjPlayerCardTrader.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            using var conn = _config.GetConnectionString("SQL_CONNECTION_STRING");
+            using var conn = _db.GetConnection();
             conn.Open();
 
             var cmd = new SqlCommand("SELECT * FROM Users WHERE Email = @Email AND Password = @Password", conn);
             cmd.Parameters.AddWithValue("@Email", model.Email);
             cmd.Parameters.AddWithValue("@Password", model.Password);
 
-            var reader = cmd.ExecuteReader();
+            using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
                 HttpContext.Session.SetInt32("UserID", (int)reader["UserID"]);
-                HttpContext.Session.SetString("FirstName", reader["FirstName"].ToString());
+                HttpContext.Session.SetString("FirstName", (string)reader["FirstName"].ToString());
                 return RedirectToAction("Index", "Home");
             }
 

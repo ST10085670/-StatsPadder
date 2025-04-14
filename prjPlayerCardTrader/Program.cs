@@ -11,11 +11,10 @@ namespace prjPlayerCardTrader
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<ApplicationDbConnect>(options =>
-            {
-                options.UseSqlServer(Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING"));
-            });
 
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddSingleton<ApplicationDbConnect>();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
@@ -29,7 +28,7 @@ namespace prjPlayerCardTrader
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
 
             app.MapControllerRoute(

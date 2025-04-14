@@ -8,32 +8,33 @@ namespace prjPlayerCardTrader.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IConfiguration _config;
+        private readonly ApplicationDbConnect _db;
 
-        public ProductController(IConfiguration config)
+        public ProductController(ApplicationDbConnect db)
         {
-            _config = config;
+            _db = db;
         }
 
         public IActionResult Index()
         {
             var products = new List<Product>();
 
-            using var conn = _config.GetConnectionString("");
+            using var conn = _db.GetConnection();
             conn.Open();
 
             var cmd = new SqlCommand("SELECT * FROM Products", conn);
-            var reader = cmd.ExecuteReader();
+            using var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
                 products.Add(new Product
                 {
                     ProductID = (int)reader["ProductID"],
-                    CardType = reader["CardType"].ToString(),
-                    CardName = reader["CardName"].ToString(),
-                    CardPrice = Convert.ToDouble(reader["CardPrice"]),
-                    Imageurl = reader["ImageUrl"].ToString()
+                    CardName = reader["Name"].ToString(),
+                    CardType = reader["Description"].ToString(),
+                    CardPrice = (double)reader["Price"],
+                    Imageurl = reader["Image"].ToString()
+
                 });
             }
 
