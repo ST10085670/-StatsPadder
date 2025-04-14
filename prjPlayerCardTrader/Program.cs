@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using prjPlayerCardTrader.Data;
+
 namespace prjPlayerCardTrader
 {
     public class Program
@@ -8,16 +11,19 @@ namespace prjPlayerCardTrader
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ApplicationDbConnect>(options =>
+            {
+                options.UseSqlServer(Environment.GetEnvironmentVariable("SQL_CONNECTION_STRING"));
+            });
+
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
+           
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
+            
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -27,8 +33,8 @@ namespace prjPlayerCardTrader
             app.UseAuthorization();
 
             app.MapControllerRoute(
-               name: "default",
-               pattern: "{controller=Home}/{action=Index}/{id?}");
+             name: "default",
+             pattern: "{controller=User}/{action=Index}/{id?}");
 
 
             app.Run();

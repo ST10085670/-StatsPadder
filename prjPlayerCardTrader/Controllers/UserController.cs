@@ -1,39 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using prjPlayerCardTrader.Data;
 using prjPlayerCardTrader.Models;
+using static prjPlayerCardTrader.Data.ApplicationDbConnect;
 
 namespace prjPlayerCardTrader.Controllers
 {
     public class UserController : Controller
     {
 
-        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _config;
 
-        public UserController(IHttpClientFactory httpClientFactory)
+        public UserController(IConfiguration config)
         {
-            _httpClient = httpClientFactory.CreateClient("API");
+            _config = config;
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Index(User model)
+        public IActionResult Index(User model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var response = await _httpClient.PostAsJsonAsync("api/auth/login", model);
+            using var conn = _config.GetConnectionString("SQL_CONNECTION_STRING");
+            conn.Open();
 
-            if (response.IsSuccessStatusCode)
+            var cmd = new SqlCommand("SELECT * FROM Users WHERE Email = @Email AND Password = @Password", conn);
+            cmd.Parameters.AddWithValue("@Email", model.Email);
+            cmd.Parameters.AddWithValue("@Password", model.Password);
+
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
             {
-                // Redirect to home after login
+                HttpContext.Session.SetInt32("UserID", (int)reader["UserID"]);
+                HttpContext.Session.SetString("FirstName", reader["FirstName"].ToString());
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("", "Invalid login attempt.");
+            ModelState.AddModelError("", "Invalid login.");
             return View(model);
         }
     }

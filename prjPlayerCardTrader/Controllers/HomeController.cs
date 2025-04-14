@@ -6,27 +6,13 @@ namespace prjPlayerCardTrader.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
-        }
+            if (!HttpContext.Session.Keys.Contains("UserID"))
+                return RedirectToAction("Index", "User");
 
-        public IActionResult Privacy()
-        {
+            ViewBag.Name = HttpContext.Session.GetString("FirstName");
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

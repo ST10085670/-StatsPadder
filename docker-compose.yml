@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  conference-db:
+  player-db:
     build:
-      context: ./PlayerCardDB  # Adjusted build context
-      dockerfile: Dockerfile   # Dockerfile for the database
+      context: ./PlayerCardDB
+      dockerfile: Dockerfile
     container_name: player-db
     environment:
       ACCEPT_EULA: "Y"
@@ -12,27 +12,24 @@ services:
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"
-      - "1400:1433" 
-      
+      - "8080:1433"
     volumes:
       - db_data:/var/opt/mssql
-      - ./logs:/var/opt/mssql/log  # Optional: To access logs
-    restart: always  # Automatically restart on failure
+      - ./logs:/var/opt/mssql/log
+    restart: always
     networks:
       - player-network
-
-  api-service:
+  mvc-app:
     build:
-      context: .               # Root context to ensure file accessibility
-      dockerfile: ./PlayerCardsAPI/Dockerfile  # Path to API Dockerfile
-    container_name: api-service-player
+      context: .
+      dockerfile: ./prjPlayerCardTrader/Dockerfile
+    container_name: mvc-app
     environment:
-      SQL_CONNECTION_STRING: "Server=player-db;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Password1!"
+      SQL_CONNECTION_STRING: "Server=player-db, 1433;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Password1!"
     ports:
-      - "5000:5000"
+      - "5000:1433"
     depends_on:
-      conference-db:
-        condition: service_healthy
+      - player-db
     networks:
       - player-network
 
