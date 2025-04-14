@@ -28,7 +28,7 @@ services:
     environment:
       SQL_CONNECTION_STRING: "Server=player-db, 1433;Database=Player;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Thandi@0312!"
     ports:
-      - "5000:5000"
+      - "5000:1400"
     depends_on:
       - player-db
     networks:
