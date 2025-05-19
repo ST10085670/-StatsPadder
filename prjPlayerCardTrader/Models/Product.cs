@@ -7,7 +7,7 @@ namespace prjPlayerCardTrader.Models
         public int ProductID { get; set; }
         public string CardName { get; set; }
         public string CardType { get; set; }
-        public double CardPrice { get; set; }
+        public decimal CardPrice { get; set; }
         public string Imageurl { get; set; }
     }
 

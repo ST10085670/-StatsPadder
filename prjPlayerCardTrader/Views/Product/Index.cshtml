@@ -1,35 +1,59 @@
 ﻿@model IEnumerable<prjPlayerCardTrader.Models.Product>
 
+@{
+    ViewData["Title"] = "Products";
+}
 
-<h2>Products</h2>
+<h1>View</h1>
 
-<table>
+<p>
+    <a asp-action="Create">Create New Product</a>
+</p>
+<table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Price</th>
-            <th>Image</th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CardName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CardType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CardPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imageurl)
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.CardName</td>
-                <td>@product.CardType</td>
-                <td>@product.CardPrice.ToString("C")</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(product.Imageurl))
-                    {
-                        <img src="@product.Imageurl" alt="@product.CardName" width="100" />
-                    }
-                    else
-                    {
-                        <span>No image</span>
-                    }
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CardName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CardType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CardPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Imageurl)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
     </tbody>
 </table>

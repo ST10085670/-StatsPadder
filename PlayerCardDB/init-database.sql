@@ -24,23 +24,15 @@ GO
 -- Create Product table
 CREATE TABLE Products (
     ProductID INT PRIMARY KEY IDENTITY(1,1),
-    CardType VARCHAR (10) NOT NULL,
     CardName VARCHAR(100) NOT NULL,
-    ImageUrl VARCHAR(100) NOT NULL,
-    CardPrice decimal(10,2)
+    CardType VARCHAR (10) NOT NULL,
+    CardPrice decimal(10,2),
+    ImageUrl VARCHAR(1000) NOT NULL,
 );
 GO
 
--- Create Purchase table
-CREATE TABLE Purchases (
-    PurchaseID INT PRIMARY KEY IDENTITY(1,1),
-    UserID INT NOT NULL,
-    ProductID INT NOT NULL,
-    PurDate DATE NOT NULL,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (PurchaseID) REFERENCES Purchases(PurchaseID)
-);
-GO
+
+
 
 -- Insert data into User table
 INSERT INTO Users (FirstName, LastName, Email, Password)
@@ -62,12 +54,3 @@ VALUES
 ('Silver', 'Onyeka', 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.givemesport.com%2Fbest-silver-cards-fifa-23-ultimate-team%2F&psig=AOvVaw0YnUoxv7je0IBOnIY3XwRH&ust=1744362550015000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOj3_YKPzYwDFQAAAAAdAAAAABAK', 25.00);
 
 GO
--- Insert data into Registrations table
-INSERT INTO Purchases (UserID, ProductID, PurDate)
-VALUES 
-(1, 1, '2025-03-15'),
-(2, 2, '2025-03-20'),
-(3, 1, '2025-03-20'),
-(4, 4, '2025-03-20'),
-(3, 2, '2025-03-25');
-GO 
